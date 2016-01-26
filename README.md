@@ -43,8 +43,9 @@ The equation below shows the model used to calculate a probability score for eac
 
 
 ### Rationale for the Algorithm
-From the final project requirements "A key point here is that the predictive model must be small enough to load onto the Shiny server. So pay attention to model size when creating and uploading your model." From the grading rubric "When you type a phrase in the input box do you get a prediction of a single word after pressing submit and/or a suitable delay for the model to compute the answer?"
+From the final project requirements "A key point here is that the predictive model must be small enough to load onto the Shiny server. So pay attention to model size when creating and uploading your model." 
 
+From the grading rubric "When you type a phrase in the input box do you get a prediction of a single word after pressing submit and/or a suitable delay for the model to compute the answer?"
 
 Based on these requirements we chose a model that would function quickly and not get hung upon a user input that it had never encountered. If the user provides random text "awpu1iub325 oi1398th351bvnnd qwliwiu2451" the algorithm will simply return the most common unigrams. In this manner we avoid using extra memory while quickly returning a result.
 
