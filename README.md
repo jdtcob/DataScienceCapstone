@@ -43,7 +43,10 @@ The equation below shows the model used to calculate a probability score for eac
 
 ![prob3](figures/probCapstone.png)
 
-If multiple matches are found for a sequence we rank them based on scores calculated from the above equation.
+If multiple matches are found for a sequence we rank them based on scores calculated from the above equation. If only one word is necessary to return we can use the equation below.
+
+![prob4](figures/maxProb.png)
+
 
 ### Algorithm Rationale
 **From the final project requirements:** "A key point here is that the predictive model must be small enough to load onto the Shiny server. So pay attention to model size when creating and uploading your model." 
