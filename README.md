@@ -16,22 +16,22 @@ The data is from a corpus called HC Corpora (www.corpora.heliohost.org). See the
 
 ### Text Prediction Flowchart
 
-Below you can see a flowchart for the text prediction algorithm deployed on the shiny apps website. One key aspect is the utilization of "Stupid Backoff" approach. Specifically, at Step 2 in the flow chart, if a match is not found we will shorten the user input to increase the likelihood a match is found. This also requires we add a penalty to the final probability, multiplying the final value by 0.4 each time we shorten the user input. For this implementation we are using log probability so we will add log(0.4) to the final probability. We should note that we only shorten the user input if we have not found the number of matches desired by the user.
+Below you can see a flowchart for the text prediction algorithm deployed on the shiny apps website. One key aspect is the utilization of "Stupid Backoff" approach. Specifically, at Step 2 in the flow chart, if a match is not found we will shorten the user input in Step 3 and search again to increase the likelihood a match is found. This also requires we add a penalty to the final probability, multiplying the final value by 0.4 each time we shorten the input. For our implementation we add log(0.4) to the final probability since we are using log probabilities.
 
 ![Flow](figures/flowChartCapstone.png)
 
 - Step 1: We begin with user input and filter it to remove profanity, punctuation, contractions, numbers, foreign characters, common words, and any extra white space.
-	+ If the user enters "I am looking forward to seeing the" the algorithm will analyze "looking forward seeing" 
+	+ If the user enters "I am looking forward to seeing the" the algorithm will use "looking forward seeing" 
 - Step 2: Search for a match, "looking forward seeing _____"
 	+ If sufficient number of matches are found, skip to Step 4
-- Step 3: If more matches are needed we shorten user input, calculate penalty, and search again
-	+ "looking forward seeing" >>> "forward seeing"
+- Step 3: If more matches are needed we shorten user input and search again
+	+ "looking forward seeing _____" >>> "forward seeing _____"
 - Step 4: Calculate probability scores for matches, add penalty if necessary
-	+ log probability is employed to increase algorithm speed since addition is faster than multiplication
+	+ Log probability is employed to increase algorithm speed
 
 
 ### Calculating Probability Score
-The image below shows a conventional method for calculating the probability of a sentence. In our case we wish to predict the next word given a certain phrase.
+The image below shows a conventional method for calculating the probability of a sentence. For our purposes the equation will be slightly different as we wish to predict the next word.
 
 ![prob1](figures/probBase.png)
 
@@ -39,11 +39,11 @@ If we employ a Markov assumption, seen below, we can reduce the computational co
 
 ![prob2](figures/probMarkov.png)
 
-The equation below shows the model used to calculate a probability score for each predicted word. Multiplication is replaced with addition when dealing with log probability. In the event the "Stupid Backoff" was employed we also must add our penalty to the probability score. Every time the input is shortened we must multiply the probability score by 0.4. In our case we add log(0.4) to our probability scores.
+The equation below shows the model used to calculate a probability score for each predicted word. Multiplication is replaced with addition when dealing with log probability. In the event the "Stupid Backoff" was employed we also must add a penalty of log(0.4) to the probability score. A penalty of log(0.4) is added to the probability score each time the sequence is shortened.
 
 ![prob3](figures/probCapstone.png)
 
-Thus, if we find multiple matches for an input sequence we can rank them based on scores calculated from the above equation.
+If multiple matches are found for a sequence we rank them based on scores calculated from the above equation.
 
 ### Algorithm Rationale
 **From the final project requirements:** "A key point here is that the predictive model must be small enough to load onto the Shiny server. So pay attention to model size when creating and uploading your model." 
