@@ -49,9 +49,11 @@ If multiple matches are found for a sequence we rank them based on scores calcul
 
 
 ### Algorithm Rationale
-**From the final project requirements:** "A key point here is that the predictive model must be small enough to load onto the Shiny server. So pay attention to model size when creating and uploading your model." 
+Key considerations for algorithm design:
 
-**From the grading rubric:** "When you type a phrase in the input box do you get a prediction of a single word after pressing submit and/or a suitable delay for the model to compute the answer?"
+- "A key point here is that the predictive model must be small enough to load onto the Shiny server. So pay attention to model size when creating and uploading your model." 
+
+- "When you type a phrase in the input box do you get a prediction of a single word after pressing submit and/or a suitable delay for the model to compute the answer?"
 
 Based on these requirements we chose a model based on existing NGrams. For a long piece of text we shorten the user input to the last three words and use the 4-gram table. These tables (1,2,3,4 gram) are loaded from a .txt file prior to execution of the algorithm. The file ‘createFilteredTables.R’ shows how the raw data files are transformed into N-Gram tables.
 
