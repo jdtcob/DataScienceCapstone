@@ -45,7 +45,7 @@ The equation below shows the model used to calculate a probability score for eac
 
 Thus, if we find multiple matches for an input sequence we can rank them based on scores calculated from the above equation.
 
-### Rationale for the Algorithm
+### Algorithm Rationale
 **From the final project requirements:** "A key point here is that the predictive model must be small enough to load onto the Shiny server. So pay attention to model size when creating and uploading your model." 
 
 **From the grading rubric:** "When you type a phrase in the input box do you get a prediction of a single word after pressing submit and/or a suitable delay for the model to compute the answer?"
