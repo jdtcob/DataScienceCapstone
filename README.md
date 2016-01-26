@@ -16,6 +16,9 @@ The data is from a corpus called HC Corpora (www.corpora.heliohost.org). See the
 
 
 ### Text Prediction Flowchart
+
+Below you can see a flowchart for the text prediction algorithm deployed on the shiny apps website. One key aspect is the utilization of "Stupid Backoff" approach. Specifically, at Step 2 in the flow chart, if a match is not found we will shorten the user input to increase the likelihood a match is found. This also requires we add a penalty to the final probability, multiplying the final value by 0.4 each time we shorten the user input. For this implementation we are using log probability so we will add log(0.4) to the final probability. We should note that we only shorten the user input if we have not found the number of matches desired by the user.
+
 ![Flow](figures/flowChartCapstone.png)
 
 - Step 1: We begin with user input and filter it to remove profanity, punctuation, contractions, numbers, foreign characters, common words, and any extra white space.
@@ -24,7 +27,7 @@ The data is from a corpus called HC Corpora (www.corpora.heliohost.org). See the
 	+ If sufficient number of matches are found, skip to Step 4
 - Step 3: If more matches are needed we shorten user input, calculate penalty, and search again
 	+ "looking forward seeing" >>> "forward seeing"
-- Step 4: Calculate probability score, add penalty if necessary
+- Step 4: Calculate probability scores for matches, add penalty if necessary
 	+ log probability is employed to increase algorithm speed since addition is faster than multiplication
 
 
@@ -41,13 +44,18 @@ The equation below shows the model used to calculate a probability score for eac
 
 ![prob3](figures/probCapstone.png)
 
+Thus, if we find multiple matches for an input sequence we can rank them based on scores calculated from the above equation.
 
 ### Rationale for the Algorithm
-From the final project requirements "A key point here is that the predictive model must be small enough to load onto the Shiny server. So pay attention to model size when creating and uploading your model." 
+**From the final project requirements:** "A key point here is that the predictive model must be small enough to load onto the Shiny server. So pay attention to model size when creating and uploading your model." 
 
-From the grading rubric "When you type a phrase in the input box do you get a prediction of a single word after pressing submit and/or a suitable delay for the model to compute the answer?"
+**From the grading rubric:** "When you type a phrase in the input box do you get a prediction of a single word after pressing submit and/or a suitable delay for the model to compute the answer?"
 
-Based on these requirements we chose a model that would function quickly and not get hung upon a user input that it had never encountered. If the user provides random text "awpu1iub325 oi1398th351bvnnd qwliwiu2451" the algorithm will simply return the most common unigrams. In this manner we avoid using extra memory while quickly returning a result.
+Based on these requirements we chose a model based on existing NGrams. For a long piece of text we shorten the user input to the last three words and use the 4-gram table. These tables (1,2,3,4 gram) are loaded from a .txt file prior to execution of the algorithm. The file ‘createFilteredTables.R’ shows how the raw data files are transformed into N-Gram tables.
+
+This is choice was made to increase the speed of the algorithm and to reduce memory usage. It is possible that using a machine learning method with an unseen sequence of text would cost extra computational memory and time.
+
+If the user provides random text to this prediction algorithm "awpu1iub325  i1398th351bvnnd  qwliwiu2451" we simply return the most common unigrams. In this manner we avoid using extra memory while quickly returning a result.
 
 
 ### Repository Files
@@ -56,11 +64,11 @@ Based on these requirements we chose a model that would function quickly and not
 - profanity.RData: a list of words to remove
 - NGramSortedFinal.txt: contains four concatenated tables and the associated NGram counts
 - divideNGram.RData: contains positions used to divide the table (from NGramSortedFinal.txt) into look up tables
-	+ NGramSortedFinal.txt and divideNGram.RData are used to load and divide the tables used for searching for a match. In lieu of loading four files we load one file and then divide the single data frame into four separate data frames according to number of words.
+	+ NGramSortedFinal.txt and divideNGram.RData are used to load and divide the tables used for searching for a match. In lieu of loading four files we load one file and then divide the single data frame into four separate data frames according to N-Gram
 - getPredWord.R: this is the main function called by server.R for the application interface
-	+ This file searches for matches based on the user input, implements "Stupid Backoff" if necessary, and calculate a penalty for the probability score
+	+ This file searches for matches based on the user input, implements "Stupid Backoff" if necessary, and calculates a penalty for the probability score
 - global.R: loads the lookup tables to search for matches, loads additional libraries and functions
-- server.R: code necessary to access user input, call functions necessary to predict the next word, and return results to the user interface 
+- server.R: code necessary to access user input, calls functions necessary to predict the next word, and return results to the user interface 
 - ui.R: code necessary for the application interface
 	+ Input: Text box that accepts a phrase, a drop down menu which sets the maximum number of words returned, and an "Analyze Text" button which initiates the algorithm 
 	+ Output: The original phrase, a filtered phrase that is provided to the algorithm, and a table that returns the predicted words
