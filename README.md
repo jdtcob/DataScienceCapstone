@@ -1,8 +1,7 @@
-# Data Science Capstone Final Project: A Text Prediction Algorithm built with the SwiftKey Dataset
+# Data Science Capstone Project: A Text Prediction Algorithm built with the SwiftKey Dataset
 This README file describes the algorithm and all files necessary to satisfy the shinyApps requirement for the Data Science Capstone final project.
 
-### From the Coursera Course website
-Project Requirements:
+### Project Requirements
 The goal of this exercise is to create a product to highlight the prediction algorithm that you have built and to provide an interface that can be accessed by others. For this project you must submit:
 
 1. A Shiny app that takes as input a phrase (multiple words) in a text box input and outputs a prediction of the next word.
