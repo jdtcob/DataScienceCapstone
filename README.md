@@ -35,7 +35,7 @@ The image below shows a conventional method for calculating the probability of a
 
 ![prob1](figures/probBase.png)
 
-In order to predict the next word we begin with the left hand side of the equation below. This statement reads the probability of you given 'looking forward seeing'. The full equation below employs a Markov assumption. Under this assumption we can reduce the computational complexity of algorithm.
+In order to predict the next word we begin with the left hand side of the equation below. This statement reads the probability of 'you' given 'looking forward seeing'. The full equation below employs a Markov assumption. Under this assumption we can reduce the computational complexity of algorithm.
 
 ![prob2](figures/probMarkov.png)
 
