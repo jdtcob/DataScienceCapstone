@@ -16,7 +16,7 @@ The data is from a corpus called HC Corpora (www.corpora.heliohost.org). See the
 
 ### Text Prediction Flowchart
 
-Below you can see a flowchart for the text prediction algorithm deployed on the shiny apps website. One key aspect is the utilization of "Stupid Backoff" approach. Specifically, at Step 2 in the flow chart, if a match is not found we will shorten the user input in Step 3 and search again to increase the likelihood a match is found. This also requires we add a penalty to the final probability, multiplying the final value by 0.4 each time we shorten the input. For our implementation we add log(0.4) to the final probability since we are using log probabilities.
+Below you can see a flowchart for the text prediction algorithm deployed on the shiny apps website. One key aspect is the utilization of "Stupid Backoff" approach. Specifically, at Step 2 in the flow chart, if a match is not found we will shorten the user input in Step 3 and search again to increase the likelihood a match is found. This also requires we add a penalty to the final probability. For our implementation we add log(0.4) to the final probability.
 
 ![Flow](figures/flowChartCapstone.png)
 
@@ -35,11 +35,11 @@ The image below shows a conventional method for calculating the probability of a
 
 ![prob1](figures/probBase.png)
 
-If we employ a Markov assumption, seen below, we can reduce the computational complexity of the equation above which will also increase the speed of our algorithm.
+In order to predict the next word we begin with the left hand side of the equation below. This statement reads the probability of you given 'looking forward seeing'. The full equation below employs a Markov assumption. Under this assumption we can reduce the computational complexity of algorithm.
 
 ![prob2](figures/probMarkov.png)
 
-The equation below shows the model used to calculate a probability score for each predicted word. Multiplication is replaced with addition when dealing with log probability. In the event the "Stupid Backoff" was employed we also must add a penalty of log(0.4) to the probability score. A penalty of log(0.4) is added to the probability score each time the sequence is shortened.
+The equation below shows the model used to calculate a probability score for each predicted word. Multiplication is replaced with addition since we are using log probability. In the event the "Stupid Backoff" was employed we also must add a penalty of log(0.4) to the probability score. A penalty of log(0.4) is added to the probability score each time the sequence is shortened.
 
 ![prob3](figures/probCapstone.png)
 
@@ -57,9 +57,7 @@ Key considerations for algorithm design:
 
 Based on these requirements we chose a model based on existing NGrams. For a long piece of text we shorten the user input to the last three words and use the 4-gram table. These tables (1,2,3,4 gram) are loaded from a .txt file prior to execution of the algorithm. The file ‘createFilteredTables.R’ shows how the raw data files are transformed into N-Gram tables.
 
-This is choice was made to increase the speed of the algorithm and to reduce memory usage. It is possible that using a machine learning method with an unseen sequence of text would cost extra computational memory and time.
-
-If the user provides random text to this prediction algorithm "awpu1iub325  i1398th351bvnnd  qwliwiu2451" we simply return the most common unigrams. In this manner we avoid using extra memory while quickly returning a result.
+This is choice was made to increase the speed of the algorithm and to reduce memory usage. It is possible that using a machine learning method with an unseen sequence of text would cost extra computational memory and time. If the user provides random text to this prediction algorithm "awpu1iub325  i1398th351bvnnd  qwliwiu2451" we simply return the most common unigrams. In this manner we avoid using extra memory while quickly returning a result.
 
 
 ### Repository Files
@@ -68,7 +66,7 @@ If the user provides random text to this prediction algorithm "awpu1iub325  i139
 - profanity.RData: a list of words to remove
 - NGramSortedFinal.txt: contains four concatenated tables and the associated NGram counts
 - divideNGram.RData: contains positions used to divide the table (from NGramSortedFinal.txt) into look up tables
-	+ NGramSortedFinal.txt and divideNGram.RData are used to load and divide the tables used for searching for a match. In lieu of loading four files we load one file and then divide the single data frame into four separate data frames according to N-Gram
+	+ NGramSortedFinal.txt and divideNGram.RData are used to load and divide the tables used for searching for a match.
 - getPredWord.R: this is the main function called by server.R for the application interface
 	+ This file searches for matches based on the user input, implements "Stupid Backoff" if necessary, and calculates a penalty for the probability score
 - global.R: loads the lookup tables to search for matches, loads additional libraries and functions
